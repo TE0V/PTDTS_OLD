@@ -1,0 +1,79 @@
+{
+    "lookup_table": [
+        {
+            "velocity": -7216.118276250077,
+            "pwm": -0.55
+        },
+        {
+            "velocity": -6529.1366743406,
+            "pwm": -0.5
+        },
+        {
+            "velocity": -5769.498848869111,
+            "pwm": -0.45
+        },
+        {
+            "velocity": -4718.865367200627,
+            "pwm": -0.4
+        },
+        {
+            "velocity": -0.6666449977712561,
+            "pwm": -0.15
+        },
+        {
+            "velocity": -0.33332329356445783,
+            "pwm": -0.25
+        },
+        {
+            "velocity": 0.0,
+            "pwm": 0.0
+        },
+        {
+            "velocity": 0.0,
+            "pwm": 0.15
+        },
+        {
+            "velocity": 0.0,
+            "pwm": -0.2
+        },
+        {
+            "velocity": 0.0,
+            "pwm": -0.3
+        },
+        {
+            "velocity": 0.3333227637781503,
+            "pwm": 0.2
+        },
+        {
+            "velocity": 0.3333235054794524,
+            "pwm": 0.25
+        },
+        {
+            "velocity": 24.665933524836042,
+            "pwm": 0.3
+        },
+        {
+            "velocity": 853.3022065390903,
+            "pwm": 0.4
+        },
+        {
+            "velocity": 5060.504188879942,
+            "pwm": 0.45
+        },
+        {
+            "velocity": 5884.176208877072,
+            "pwm": 0.5
+        },
+        {
+            "velocity": 6582.145016653856,
+            "pwm": 0.55
+        }
+    ],
+    "calibration_date": "2025-11-09 21:05:00 (CLEANED)",
+    "motor": "30:1 Pololu 37D with 64 CPR encoder",
+    "external_gear_ratio": "4.5:1 (24T to 108T)",
+    "measurement_duration": 3.0,
+    "settling_time": 1.0,
+    "counts_per_360": -8556,
+    "notes": "Removed unreliable data points at PWM >0.55 due to encoder edge loss at high speeds. Also removed anomalous 0.35 PWM point and high negative PWM points with incorrect directions. Maximum safe velocity: ±7200 counts/sec"
+}

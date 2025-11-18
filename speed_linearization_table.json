@@ -1,0 +1,101 @@
+{
+    "lookup_table": [
+        {
+            "velocity": -9580.915349104718,
+            "pwm": -0.6
+        },
+        {
+            "velocity": -9145.426689366454,
+            "pwm": -0.55
+        },
+        {
+            "velocity": -8889.935785898972,
+            "pwm": -0.5
+        },
+        {
+            "velocity": -8141.975360713981,
+            "pwm": -0.45
+        },
+        {
+            "velocity": -6785.519062066869,
+            "pwm": 0.35
+        },
+        {
+            "velocity": -6118.281566908881,
+            "pwm": 0.4
+        },
+        {
+            "velocity": -5734.0724814606565,
+            "pwm": 0.3
+        },
+        {
+            "velocity": -5323.822229244469,
+            "pwm": 0.28
+        },
+        {
+            "velocity": -3855.98114210662,
+            "pwm": 0.25
+        },
+        {
+            "velocity": -3521.3806784488015,
+            "pwm": -0.22
+        },
+        {
+            "velocity": -2896.1517061642467,
+            "pwm": -0.2
+        },
+        {
+            "velocity": 0.0,
+            "pwm": 0.0
+        },
+        {
+            "velocity": 3526.611370274948,
+            "pwm": 0.22
+        },
+        {
+            "velocity": 4199.615451060406,
+            "pwm": -0.25
+        },
+        {
+            "velocity": 5249.045672592962,
+            "pwm": -0.28
+        },
+        {
+            "velocity": 5869.291005714839,
+            "pwm": -0.3
+        },
+        {
+            "velocity": 6750.765060261214,
+            "pwm": -0.35
+        },
+        {
+            "velocity": 6805.810272247543,
+            "pwm": -0.4
+        },
+        {
+            "velocity": 8435.20078313929,
+            "pwm": 0.45
+        },
+        {
+            "velocity": 8869.841148558664,
+            "pwm": 0.5
+        },
+        {
+            "velocity": 9433.622777566712,
+            "pwm": 0.55
+        },
+        {
+            "velocity": 9552.752805667282,
+            "pwm": 0.6
+        }
+    ],
+    "minimum_pwm_cw": 0.21000000000000002,
+    "minimum_pwm_ccw": 0.2,
+    "calibration_date": "2025-11-17 18:15:39",
+    "motor": "30:1 Pololu 37D with 64 CPR encoder",
+    "external_gear_ratio": "4.5:1 (24T to 108T)",
+    "measurement_duration": 2.0,
+    "settling_time": 1.0,
+    "counts_per_360": -8556,
+    "validation_status": "FAILED"
+}

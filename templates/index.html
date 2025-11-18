@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTDTS - Drone Tracking System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 12px;
+            gap: 12px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: #151515;
+            border: 1px solid #252525;
+            border-radius: 4px;
+        }
+        
+        .header h1 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #888;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+            min-height: 0;
+        }
+        
+        .video-section {
+            flex: 1;
+            background: #000000;
+            border: 1px solid #252525;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .video-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            position: relative;
+        }
+        
+        #videoStream {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+        }
+        
+        .video-overlay {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 6px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            color: #10b981;
+            border: 1px solid #1a1a1a;
+        }
+        
+        .control-panel {
+            width: 320px;
+            background: #151515;
+            border: 1px solid #252525;
+            border-radius: 4px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .panel-section {
+            background: #0a0a0a;
+            padding: 14px;
+            border-radius: 3px;
+            border: 1px solid #1a1a1a;
+        }
+        
+        .panel-section h2 {
+            font-size: 11px;
+            margin-bottom: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 500;
+        }
+        
+        .telemetry-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .telemetry-item {
+            background: #151515;
+            padding: 10px;
+            border-radius: 3px;
+            border-left: 2px solid #10b981;
+        }
+        
+        .telemetry-label {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        
+        .telemetry-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #10b981;
+            font-family: 'SF Mono', 'Consolas', monospace;
+        }
+        
+        .angle-display {
+            grid-column: 1 / -1;
+        }
+        
+        .angle-display .telemetry-value {
+            font-size: 28px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .control-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .control-btn {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 3px;
+            color: #e0e0e0;
+            font-size: 18px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-weight: 500;
+        }
+        
+        .control-btn:hover {
+            background: #252525;
+            border-color: #353535;
+        }
+        
+        .control-btn:active {
+            background: #2a2a2a;
+        }
+        
+        .control-btn:disabled {
+            background: #151515;
+            cursor: not-allowed;
+            opacity: 0.4;
+            border-color: #1a1a1a;
+        }
+        
+        .control-btn.stop {
+            background: #1a1a1a;
+            border-color: #2a2a2a;
+        }
+        
+        .control-btn.stop:hover {
+            background: #252525;
+            border-color: #353535;
+        }
+        
+        .control-btn.reset {
+            background: #1a1a1a;
+            border-color: #2a2a2a;
+            font-size: 12px;
+        }
+        
+        .control-btn.reset:hover {
+            background: #252525;
+            border-color: #353535;
+        }
+        
+        .keyboard-hint {
+            font-size: 10px;
+            color: #555;
+            text-align: center;
+            margin-top: 4px;
+        }
+        
+        .tracking-status {
+            padding: 10px;
+            border-radius: 3px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 12px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            letter-spacing: 0.5px;
+        }
+        
+        .tracking-status.active {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .tracking-status.inactive {
+            background: rgba(100, 100, 100, 0.1);
+            color: #666;
+            border: 1px solid #252525;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>PTDTS - Drone Tracking System</h1>
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>SYSTEM ACTIVE</span>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="video-section">
+                <div class="video-container">
+                    <img id="videoStream" src="/video_feed" alt="Camera Feed">
+                    <div class="video-overlay">
+                        <div id="videoFPS">FPS: --</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="control-panel">
+                <div class="panel-section">
+                    <h2>Telemetry</h2>
+                    <div class="telemetry-grid">
+                        <div class="telemetry-item angle-display">
+                            <div class="telemetry-label">Pan Angle</div>
+                            <div class="telemetry-value" id="angle">0.0°</div>
+                        </div>
+                        <div class="telemetry-item">
+                            <div class="telemetry-label">Motor Speed</div>
+                            <div class="telemetry-value" id="motorSpeed">0%</div>
+                        </div>
+                        <div class="telemetry-item">
+                            <div class="telemetry-label">Detections</div>
+                            <div class="telemetry-value" id="detections">0</div>
+                        </div>
+                        <div class="telemetry-item">
+                            <div class="telemetry-label">Encoder</div>
+                            <div class="telemetry-value" id="encoderCount">0</div>
+                        </div>
+                        <div class="telemetry-item">
+                            <div class="telemetry-label">Update Rate</div>
+                            <div class="telemetry-value" id="updateRate">--</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h2>Manual Control</h2>
+                    <div class="controls">
+                        <div class="control-pad">
+                            <div></div>
+                            <button class="control-btn" onclick="manualControl('ccw')" title="Counter-Clockwise">
+                                ↑
+                            </button>
+                            <div></div>
+                            <button class="control-btn" onclick="manualControl('ccw')" title="Counter-Clockwise">
+                                ←
+                            </button>
+                            <button class="control-btn stop" onclick="manualControl('stop')" title="Stop">
+                                ■
+                            </button>
+                            <button class="control-btn" onclick="manualControl('cw')" title="Clockwise">
+                                →
+                            </button>
+                            <div></div>
+                            <button class="control-btn" onclick="manualControl('cw')" title="Clockwise">
+                                ↓
+                            </button>
+                            <div></div>
+                        </div>
+                        
+                        <button class="control-btn reset" onclick="resetEncoder()" style="grid-column: 1 / -1;">
+                            RESET ENCODER
+                        </button>
+                        
+                        <div class="keyboard-hint">
+                            Use arrow keys for control • Space to stop
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h2>Tracking Status</h2>
+                    <div class="tracking-status inactive" id="trackingStatus">
+                        NO TARGET
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Update telemetry from server
+        let lastUpdateTime = Date.now();
+        let updateCount = 0;
+        
+        function updateTelemetry() {
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    // Update angle
+                    document.getElementById('angle').textContent = data.encoder_angle.toFixed(1) + '°';
+                    
+                    // Update motor speed
+                    const speedPercent = (data.motor_speed * 100).toFixed(0);
+                    document.getElementById('motorSpeed').textContent = 
+                        (data.motor_speed >= 0 ? '+' : '') + speedPercent + '%';
+                    
+                    // Update detections
+                    document.getElementById('detections').textContent = data.detections.length;
+                    
+                    // Update encoder count
+                    document.getElementById('encoderCount').textContent = data.encoder_count;
+                    
+                    // Update tracking status
+                    const statusDiv = document.getElementById('trackingStatus');
+                    if (data.tracking_active) {
+                        statusDiv.textContent = 'TRACKING ACTIVE';
+                        statusDiv.className = 'tracking-status active';
+                    } else {
+                        statusDiv.textContent = 'NO TARGET';
+                        statusDiv.className = 'tracking-status inactive';
+                    }
+                    
+                    // Calculate update rate
+                    updateCount++;
+                    const now = Date.now();
+                    if (now - lastUpdateTime >= 1000) {
+                        document.getElementById('updateRate').textContent = updateCount + ' Hz';
+                        updateCount = 0;
+                        lastUpdateTime = now;
+                    }
+                })
+                .catch(error => console.error('Error fetching status:', error));
+        }
+        
+        // Update telemetry at 10 Hz
+        setInterval(updateTelemetry, 100);
+        
+        // Manual control functions
+        function manualControl(command) {
+            fetch('/api/manual_control', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    command: command,
+                    speed: 0.3
+                })
+            });
+        }
+        
+        function resetEncoder() {
+            fetch('/api/manual_control', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    command: 'reset_encoder'
+                })
+            });
+        }
+        
+        // Keyboard controls
+        document.addEventListener('keydown', (event) => {
+            switch(event.key) {
+                case 'ArrowUp':
+                case 'ArrowLeft':
+                    event.preventDefault();
+                    manualControl('ccw');
+                    break;
+                case 'ArrowDown':
+                case 'ArrowRight':
+                    event.preventDefault();
+                    manualControl('cw');
+                    break;
+                case ' ':
+                    event.preventDefault();
+                    manualControl('stop');
+                    break;
+                case 'r':
+                case 'R':
+                    event.preventDefault();
+                    resetEncoder();
+                    break;
+            }
+        });
+        
+        // Stop motor on key release
+        document.addEventListener('keyup', (event) => {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+                manualControl('stop');
+            }
+        });
+    </script>
+</body>
+</html>
